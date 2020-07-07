@@ -2,23 +2,31 @@ package dboperations
 
 import (
 	"database/sql"
-	"fmt"
+	"dbdesign"
 )
 
 // Update function updates data in the table
-func Update(db *sql.DB) {
+func Update(db *sql.DB, row dbdesign.Row) dbdesign.Row {
 	// Executing Update Query on the database
 	sqlStatement := `
 		UPDATE users
-		SET first_name = $2, last_name = $3, email = $4
+		SET age = $2, first_name = $3, last_name = $4, email = $5
 		WHERE id = $1
-		RETURNING id, email;
+		RETURNING id;
 	`
 	var id int
-	var email string
-	err := db.QueryRow(sqlStatement, 2, "Brett", "Yang", "brettyang@gmail.com").Scan(&id, &email)
+	err := db.QueryRow(sqlStatement, row.ID, row.Age, row.FirstName, row.LastName, row.Email).Scan(&id)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(id, email)
+
+	reply := dbdesign.Row{
+		ID:        id,
+		Age:       row.Age,
+		FirstName: row.FirstName,
+		LastName:  row.LastName,
+		Email:     row.Email,
+	}
+
+	return reply
 }

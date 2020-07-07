@@ -7,7 +7,7 @@ import (
 )
 
 // Insert function inserts a row in table
-func Insert(db *sql.DB, row dbdesign.Row) {
+func Insert(db *sql.DB, row dbdesign.Row) dbdesign.Row {
 	// Executing Insert query on the database
 	sqlStatement := `
 		INSERT INTO
@@ -21,4 +21,13 @@ func Insert(db *sql.DB, row dbdesign.Row) {
 		panic(err)
 	}
 	fmt.Println("New record ID is:", id)
+
+	reply := dbdesign.Row{
+		ID:        id,
+		Age:       row.Age,
+		FirstName: row.FirstName,
+		LastName:  row.LastName,
+		Email:     row.Email,
+	}
+	return reply
 }

@@ -5,6 +5,7 @@ import (
 	"dbconnection" // connects the go code with the database
 	"dbdesign"     // database schema design (no. of fieilds)
 	"dboperations" // dboperations contains the basic CRUD opetions of the database
+	"errors"
 
 	_ "fmt" // standard format library
 	"log"
@@ -23,8 +24,31 @@ type API struct{}
 
 // Add inserts data into the table
 func (a *API) Add(row dbdesign.Row, reply *dbdesign.Row) error {
-	dboperations.Insert(db, row)
-	*reply = row
+	*reply = dboperations.Insert(db, row)
+	return nil
+}
+
+// Update Method updates the data in the database
+func (a *API) Update(row dbdesign.Row, reply *dbdesign.Row) error {
+	*reply = dboperations.Update(db, row)
+	return nil
+}
+
+// Delete Method deletes the data in the database
+func (a *API) Delete(row dbdesign.Row, reply *dbdesign.Row) error {
+	rowsAffected := dboperations.Delete(db, row)
+	if rowsAffected == 0 {
+		return errors.New("No User Found")
+	}
+	return nil
+}
+
+// Find Method Find the data in the database
+func (a *API) Find(row dbdesign.Row, reply *dbdesign.Row) error {
+	*reply = dboperations.Find(db, row)
+	if reply.Email == "" {
+		return errors.New("No User Found")
+	}
 	return nil
 }
 
@@ -54,10 +78,6 @@ func main() {
 	if err != nil {
 		log.Fatal("error serving: ", err)
 	}
-
-	// dboperations.Insert(db)
-
-	// dboperations.Update(db)
 
 	// dboperations.Delete(db)
 }

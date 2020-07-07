@@ -16,14 +16,50 @@ func main() {
 		log.Fatal("Connection error: ", err)
 	}
 
-	addUser := dbdesign.Row{
-		Age:       65,
-		FirstName: "Jay",
-		LastName:  "Leno",
-		Email:     "jay@leno.io",
+	// data := dbdesign.Row{
+	// 	Age:       65,
+	// 	FirstName: "Jay",
+	// 	LastName:  "Leno",
+	// 	Email:     "jay@leno.io",
+	// }
+
+	// err = client.Call("API.Add", data, &reply)
+	// if err != nil {
+	// 	log.Fatal("error occured during Adding a User: ", err)
+	// }
+	// fmt.Println("UserAdded: ", reply)
+
+	// data := dbdesign.Row{
+	// 	ID:        17,
+	// 	Age:       65,
+	// 	FirstName: "Conan",
+	// 	LastName:  "Brian",
+	// 	Email:     "Conan@Brian.io",
+	// }
+
+	// err = client.Call("API.Update", data, &reply)
+	// if err != nil {
+	// 	log.Fatal("error occured during Adding a User: ", err)
+	// }
+	// fmt.Println("UserUpdated: ", reply)
+
+	// data := dbdesign.Row{
+	// 	ID: 12,
+	// }
+
+	// err = client.Call("API.Delete", data, &reply)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// fmt.Println("UserDeleted")
+
+	data := dbdesign.Row{
+		ID: 120,
 	}
 
-	client.Call("API.Add", addUser, &reply)
-
-	fmt.Println("UserAdded: ", reply)
+	err = client.Call("API.Find", data, &reply)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("UserAdded", reply)
 }

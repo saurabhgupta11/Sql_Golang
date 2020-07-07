@@ -2,22 +2,29 @@ package dboperations
 
 import (
 	"database/sql"
+	"dbdesign"
 	"fmt"
 )
 
 // Find let's you query for data in the database
-func Find(db *sql.DB) {
-	sqlStatement := `SELECT id, email FROM users WHERE id=$1;`
-	var email string
-	var id int
+func Find(db *sql.DB, row dbdesign.Row) dbdesign.Row {
+	sqlStatement := `SELECT id, age, first_name, last_name, email FROM users WHERE id=$1;`
+	reply := dbdesign.Row{
+		ID:        row.ID,
+		Age:       row.Age,
+		FirstName: row.FirstName,
+		LastName:  row.LastName,
+		Email:     row.Email,
+	}
 	// Replace 3 with an ID from your database or another random
 	// value to test the no rows use case.
-	row := db.QueryRow(sqlStatement, 1)
-	switch err := row.Scan(&id, &email); err {
+	r := db.QueryRow(sqlStatement, row.ID)
+	switch err := r.Scan(&reply.ID, &reply.Age, &reply.FirstName, &reply.LastName, &reply.Email); err {
 	case sql.ErrNoRows:
-		fmt.Println("No rows were returned!")
+		fmt.Println("No User Found")
+		return reply
 	case nil:
-		fmt.Println(id, email)
+		return reply
 	default:
 		panic(err)
 	}
